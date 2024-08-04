@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input:-webkit-autofill {
+  background-color: #1a1c20 !important;
+  /* Color de fondo del input */
+  -webkit-text-fill-color: #ffffff !important;
+  /* Color del texto */
+  transition: background-color 5000s ease-in-out 0s;
+  /* Mantiene el color de fondo */
+}
+
+.custom-password-input::-webkit-inner-spin-button,
+.custom-password-input::-webkit-outer-spin-button {
+  display: none;
+}
+
+.custom-password-input::-ms-reveal {
+  display: none;
+}
