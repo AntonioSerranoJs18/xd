@@ -1,9 +1,7 @@
 'use client';
-'use client';
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { HiUser, HiOfficeBuilding, HiStatusOnline, HiStatusOffline, HiClock } from 'react-icons/hi';
-import { HiCalendar } from 'react-icons/hi'; // Icono de calendario solo para el título
+import { HiUser, HiOfficeBuilding, HiStatusOnline, HiStatusOffline, HiClock, HiCalendar } from 'react-icons/hi';
 
 const parseJwt = (token) => {
     try {
@@ -54,43 +52,54 @@ const Appointments = () => {
                 <HiCalendar className="text-blue-600 text-4xl mr-4" />
                 <h1 className="text-4xl font-bold text-blue-600">Your Appointments</h1>
             </div>
-            <ul className="space-y-4">
-                {appointments.map((appointment) => (
-                    <li key={appointment.Id} className="bg-white border border-gray-300 rounded-lg shadow-md p-6 flex items-start">
-                        <div className="flex-grow ml-4">
-                            <div className="flex items-center mb-2">
-                                <HiUser className="text-gray-600 text-xl mr-2" />
-                                <h2 className="text-xl font-semibold">{appointment.PatientFullName}</h2>
+            {appointments.length === 0 ? (
+                <div className="text-center text-gray-600">
+                    <p>You don't have any appointments yet.</p>
+                </div>
+            ) : (
+                <ul className="space-y-4">
+                    {appointments.map((appointment) => (
+                        <li key={appointment.Id} className="bg-white border border-gray-300 rounded-lg shadow-md p-6 flex items-start">
+                            <div className="flex-grow ml-4">
+                                <div className="flex items-center mb-2">
+                                    <HiUser className="text-gray-600 text-xl mr-2" />
+                                    <h2 className="text-xl font-semibold">{appointment.PatientFullName}</h2>
+                                </div>
+                                <p className="text-gray-700 mb-1 flex items-center">
+                                    <HiClock className="text-gray-500 text-xl mr-2" />
+                                    <span className="font-medium">Date:</span>
+                                    <span className="ml-2">{new Date(appointment.AppoinmentDate).toLocaleDateString()} at {new Date(appointment.AppoinmentDate).toLocaleTimeString()}</span>
+                                </p>
+                                <p className="text-gray-700 mb-1 flex items-center">
+                                    <HiUser className="text-gray-500 text-xl mr-2" />
+                                    <span className="font-medium">Doctor:</span>
+                                    <span className="ml-2">{appointment.DoctorFullName}</span>
+                                </p>
+                                <p className="text-gray-700 mb-1 flex items-center">
+                                    <HiOfficeBuilding className="text-gray-500 text-xl mr-2" />
+                                    <span className="font-medium">Consultory:</span>
+                                    <span className="ml-2">{appointment.ConsultoryName}</span>
+                                </p>
+                                <p className="text-gray-700 flex items-center">
+                                    {appointment.IsActive === 'Activo' ? (
+                                        <>
+                                            <HiStatusOnline className="text-green-500 text-xl mr-2" />
+                                            <span className="font-medium">Status:</span>
+                                            <span className="ml-2">{appointment.StatusName}</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <HiStatusOffline className="text-red-500 text-xl mr-2" />
+                                            <span className="font-medium">Status:</span>
+                                            <span className="ml-2">{appointment.StatusName}</span>
+                                        </>
+                                    )}
+                                </p>
                             </div>
-                            <p className="text-gray-700 mb-1 flex items-center">
-                                <HiClock className="text-gray-500 text-xl mr-2" />
-                                <span className="font-medium">Date:</span> {new Date(appointment.AppoinmentDate).toLocaleDateString()} at {new Date(appointment.AppoinmentDate).toLocaleTimeString()}
-                            </p>
-                            <p className="text-gray-700 mb-1 flex items-center">
-                                <HiUser className="text-gray-500 text-xl mr-2" />
-                                <span className="font-medium">Doctor:</span> {appointment.DoctorFullName}
-                            </p>
-                            <p className="text-gray-700 mb-1 flex items-center">
-                                <HiOfficeBuilding className="text-gray-500 text-xl mr-2" />
-                                <span className="font-medium">Consultory:</span> {appointment.ConsultoryName}
-                            </p>
-                            <p className="text-gray-700 flex items-center">
-                                {appointment.IsActive === 'Activo' ? (
-                                    <>
-                                        <HiStatusOnline className="text-green-500 text-xl mr-2" />
-                                        <span className="font-medium">Status:</span> {appointment.StatusName}
-                                    </>
-                                ) : (
-                                    <>
-                                        <HiStatusOffline className="text-red-500 text-xl mr-2" />
-                                        <span className="font-medium">Status:</span> {appointment.StatusName}
-                                    </>
-                                )}
-                            </p>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };

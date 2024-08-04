@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { HiUser } from 'react-icons/hi'; // Ícono de paciente
+import { HiUser, HiPhone, HiOutlineIdentification, HiOutlineCalendar, HiOutlineUser, HiOutlineMail } from 'react-icons/hi';
 
 const PatientInfo = () => {
     const { id } = useParams();
@@ -43,25 +43,64 @@ const PatientInfo = () => {
     }
 
     return (
-        <div className="p-6 py-20 bg-gray-100 min-h-screen">
-            <div className="flex items-center justify-center mb-6">
-                <HiUser className="text-blue-600 text-4xl mr-4" />
-                <h1 className="text-4xl font-bold text-gray-600">Patient Information</h1>
-            </div>
-            <div className="bg-white border border-gray-300 rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold mb-4">{patientData.FullName}</h2>
-                <p className="text-lg mb-2"><strong>First Name:</strong> {patientData.FirstName}</p>
-                <p className="text-lg mb-2"><strong>Middle Name:</strong> {patientData.MiddleName}</p>
-                <p className="text-lg mb-2"><strong>Last Name:</strong> {patientData.LastName}</p>
-                <p className="text-lg mb-2"><strong>Cell Phone:</strong> {patientData.CellPhone}</p>
-                <p className="text-lg mb-2"><strong>Gender:</strong> {patientData.GenderName}</p>
-                <p className="text-lg mb-2"><strong>Birth Date:</strong> {new Date(patientData.BirthDate).toLocaleDateString()}</p>
-                <button
-                    onClick={handleUpdateClick}
-                    className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
-                >
-                    Update
-                </button>
+        <div className="min-h-screen bg-gray-100 py-12 flex items-center justify-center">
+            <div className="w-full max-w-3xl bg-white shadow-md rounded-lg p-8">
+                <div className="flex items-center justify-center mb-6">
+                    <HiUser className="text-blue-600 text-5xl mr-4" />
+                    <h1 className="text-4xl font-bold text-gray-700">Patient Information</h1>
+                </div>
+                <div className="space-y-4">
+                    <div className="flex items-center space-x-3">
+                        <HiOutlineUser className="text-gray-500 text-2xl" />
+                        <div className="w-full">
+                            <h2 className="text-2xl font-semibold text-gray-700">{patientData.FullName}</h2>
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                        <HiOutlineIdentification className="text-gray-500 text-2xl" />
+                        <div className="w-full">
+                            <p className="text-lg text-gray-600"><strong>First Name:</strong> {patientData.FirstName}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                        <HiOutlineIdentification className="text-gray-500 text-2xl" />
+                        <div className="w-full">
+                            <p className="text-lg text-gray-600"><strong>Middle Name:</strong> {patientData.MiddleName}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                        <HiOutlineIdentification className="text-gray-500 text-2xl" />
+                        <div className="w-full">
+                            <p className="text-lg text-gray-600"><strong>Last Name:</strong> {patientData.LastName}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                        <HiPhone className="text-gray-500 text-2xl" />
+                        <div className="w-full">
+                            <p className="text-lg text-gray-600"><strong>Cell Phone:</strong> {patientData.CellPhone}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                        <HiOutlineMail className="text-gray-500 text-2xl" />
+                        <div className="w-full">
+                            <p className="text-lg text-gray-600"><strong>Gender:</strong> {patientData.GenderName}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                        <HiOutlineCalendar className="text-gray-500 text-2xl" />
+                        <div className="w-full">
+                            <p className="text-lg text-gray-600"><strong>Birth Date:</strong> {new Date(patientData.BirthDate).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                    <div className="flex justify-center mt-8">
+                        <button
+                            onClick={handleUpdateClick}
+                            className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-transform transform hover:scale-105"
+                        >
+                            Update Information
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
       </head>

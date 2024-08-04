@@ -6,32 +6,23 @@ import Cookies from 'js-cookie';
 const EditPatient = () => {
     const { id } = useParams();
     const router = useRouter();
-    const [formData, setFormData] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [formData, setFormData] = useState({
+        FirstName: '',
+        MiddleName: '',
+        LastName: '',
+        CellPhone: '',
+        Gender: '',
+        BirthDate: '',
+        Address1: '',
+        Address2: '',
+        Street: '',
+        ExternalNumber: '',
+        InternalNumber: '',
+        ZipCode: ''
+    });
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
-
-    useEffect(() => {
-        if (id) {
-            fetch(`http://localhost:5156/api/Patient?Id=${id}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    setFormData(data.Data[0] || {});
-                })
-                .catch(err => {
-                    console.error('Error fetching patient data:', err);
-                    setError('Error fetching patient data');
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
-        }
-    }, [id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -55,8 +46,8 @@ const EditPatient = () => {
             MiddleName: formData.MiddleName || '',
             LastName: formData.LastName || '',
             CellPhone: formData.CellPhone || '',
-            Gender: formData.Gender ? parseInt(formData.Gender, 10) : 0, // Aseguramos que sea un número
-            BirthDate: formatDate(formData.BirthDate) || '', // Formateamos la fecha
+            Gender: formData.Gender ? parseInt(formData.Gender, 10) : 0,
+            BirthDate: formatDate(formData.BirthDate) || '',
             Address1: formData.Address1 || '',
             Address2: formData.Address2 || '',
             Street: formData.Street || '',
@@ -77,184 +68,94 @@ const EditPatient = () => {
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Server Error:', errorText);
-                setError(`Error updating patient data: ${errorText}`);
+                setError('An error occurred while updating patient data. Please try again.');
                 return;
             }
 
             const result = await response.json();
-            console.log('Update result:', result);
             setSuccess('Patient data updated successfully');
+
+            // Indicar que los datos han cambiado
+            localStorage.setItem('patientDataUpdated', 'true');
+
             setTimeout(() => {
                 router.push(`/patient-info/${id}`);
             }, 2000);
         } catch (err) {
-            console.error('Fetch error:', err);
-            setError('Error updating patient data');
+            setError('An error occurred while updating patient data. Please try again.');
         }
     };
 
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
-        return date.toISOString(); // Devuelve la fecha en formato completo ISO 8601
+        return date.toISOString();
     };
 
-    if (loading) {
-        return <div className="text-center py-4">Loading...</div>;
-    }
-
     return (
-        <div className="p-6 py-20 bg-gray-100 min-h-screen">
-            <div className="flex items-center justify-center mb-6">
-                <h1 className="text-4xl font-bold text-gray-600">Edit Patient Information</h1>
-            </div>
-            <div className="bg-white border border-gray-300 rounded-lg shadow-md p-6">
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold mb-2" htmlFor="FirstName">First Name</label>
-                        <input
-                            type="text"
-                            id="FirstName"
-                            name="FirstName"
-                            value={formData.FirstName || ''}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold mb-2" htmlFor="MiddleName">Middle Name</label>
-                        <input
-                            type="text"
-                            id="MiddleName"
-                            name="MiddleName"
-                            value={formData.MiddleName || ''}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold mb-2" htmlFor="LastName">Last Name</label>
-                        <input
-                            type="text"
-                            id="LastName"
-                            name="LastName"
-                            value={formData.LastName || ''}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold mb-2" htmlFor="CellPhone">Cell Phone</label>
-                        <input
-                            type="text"
-                            id="CellPhone"
-                            name="CellPhone"
-                            value={formData.CellPhone || ''}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold mb-2" htmlFor="Gender">Gender</label>
-                        <input
-                            type="number"
-                            id="Gender"
-                            name="Gender"
-                            value={formData.Gender || ''}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold mb-2" htmlFor="BirthDate">Birth Date</label>
-                        <input
-                            type="date"
-                            id="BirthDate"
-                            name="BirthDate"
-                            value={formData.BirthDate ? formatDate(formData.BirthDate).split('T')[0] : ''}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold mb-2" htmlFor="Address1">Address 1</label>
-                        <input
-                            type="text"
-                            id="Address1"
-                            name="Address1"
-                            value={formData.Address1 || ''}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold mb-2" htmlFor="Address2">Address 2</label>
-                        <input
-                            type="text"
-                            id="Address2"
-                            name="Address2"
-                            value={formData.Address2 || ''}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold mb-2" htmlFor="Street">Street</label>
-                        <input
-                            type="text"
-                            id="Street"
-                            name="Street"
-                            value={formData.Street || ''}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold mb-2" htmlFor="ExternalNumber">External Number</label>
-                        <input
-                            type="text"
-                            id="ExternalNumber"
-                            name="ExternalNumber"
-                            value={formData.ExternalNumber || ''}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold mb-2" htmlFor="InternalNumber">Internal Number</label>
-                        <input
-                            type="text"
-                            id="InternalNumber"
-                            name="InternalNumber"
-                            value={formData.InternalNumber || ''}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-lg font-semibold mb-2" htmlFor="ZipCode">Zip Code</label>
-                        <input
-                            type="text"
-                            id="ZipCode"
-                            name="ZipCode"
-                            value={formData.ZipCode || ''}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <button
-                            type="submit"
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                        >
-                            Save Changes
-                        </button>
-                    </div>
-                </form>
-                {error && <div className="text-red-500 mt-4">{error}</div>}
-                {success && <div className="text-green-500 mt-4">{success}</div>}
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl w-full space-y-8">
+                <div>
+                    <h1 className="text-center text-4xl font-extrabold text-gray-900">Edit Patient Information</h1>
+                </div>
+                <div className="bg-white p-8 shadow rounded-lg">
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            {Object.keys(formData).slice(0, 6).map((key) => (
+                                <div key={key}>
+                                    <label className="block text-sm font-medium text-gray-700" htmlFor={key}>
+                                        {key.replace(/([A-Z])/g, ' $1').trim()}
+                                    </label>
+                                    <input
+                                        type={key === 'BirthDate' ? 'date' : 'text'}
+                                        id={key}
+                                        name={key}
+                                        value={formData[key] || ''}
+                                        onChange={handleChange}
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            {Object.keys(formData).slice(6).map((key) => (
+                                <div key={key}>
+                                    <label className="block text-sm font-medium text-gray-700" htmlFor={key}>
+                                        {key.replace(/([A-Z])/g, ' $1').trim()}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id={key}
+                                        name={key}
+                                        value={formData[key] || ''}
+                                        onChange={handleChange}
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="flex justify-between items-center mt-8">
+                            <button
+                                type="submit"
+                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                    {error && (
+                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4" role="alert">
+                            <strong className="font-bold">Error:</strong>
+                            <span className="block sm:inline"> {error}</span>
+                        </div>
+                    )}
+                    {success && (
+                        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4" role="alert">
+                            <strong className="font-bold">Success:</strong>
+                            <span className="block sm:inline"> {success}</span>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

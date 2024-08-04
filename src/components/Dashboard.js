@@ -22,17 +22,23 @@ const parseJwt = (token) => {
 
 const PatientDashboard = () => {
     const [patientName, setPatientName] = useState('');
-    const [patientId, setPatientId] = useState(null); 
+    const [patientId, setPatientId] = useState(null);
 
     useEffect(() => {
-        const token = Cookies.get('token'); 
+        const token = Cookies.get('token');
         if (token) {
             const decodedToken = parseJwt(token);
             if (decodedToken) {
                 const name = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
-                const id = decodedToken["PatientId"]; 
-                setPatientName(name);
-                setPatientId(id);
+                const id = decodedToken["PatientId"];
+                if (name && id) {
+                    setPatientName(name);
+                    setPatientId(id);
+                } else {
+                    console.error('Invalid token data');
+                }
+            } else {
+                console.error('Failed to decode token');
             }
         }
     }, []);
@@ -45,7 +51,6 @@ const PatientDashboard = () => {
             </div>
             <div className="flex-1 p-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-               
                     <Link href="/schedule-appointment">
                         <div className="bg-white border border-gray-300 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
                             <div className="p-6 flex items-center space-x-4">
@@ -57,7 +62,6 @@ const PatientDashboard = () => {
                             </div>
                         </div>
                     </Link>
-                   
                     <Link href="/appointments">
                         <div className="bg-white border border-gray-300 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
                             <div className="p-6 flex items-center space-x-4">
@@ -69,7 +73,6 @@ const PatientDashboard = () => {
                             </div>
                         </div>
                     </Link>
-                 
                     <Link href="/appointment-history">
                         <div className="bg-white border border-gray-300 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
                             <div className="p-6 flex items-center space-x-4">
@@ -81,7 +84,6 @@ const PatientDashboard = () => {
                             </div>
                         </div>
                     </Link>
-                   
                     <Link href="/select-location">
                         <div className="bg-white border border-gray-300 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
                             <div className="p-6 flex items-center space-x-4">
@@ -93,7 +95,6 @@ const PatientDashboard = () => {
                             </div>
                         </div>
                     </Link>
-                 
                     <Link href={`/patient-info/${patientId}`}>
                         <div className="bg-white border border-gray-300 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
                             <div className="p-6 flex items-center space-x-4">
@@ -105,7 +106,6 @@ const PatientDashboard = () => {
                             </div>
                         </div>
                     </Link>
-                 
                     <Link href="/manage-time">
                         <div className="bg-white border border-gray-300 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
                             <div className="p-6 flex items-center space-x-4">
